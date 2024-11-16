@@ -3,10 +3,12 @@ use crate::{disassembly::Disassembly, simulation::cpu::Cpu};
 use std::{fmt::Debug, slice::Iter, sync::Arc};
 
 pub mod glitch;
+pub mod instruction_bitflip;
 pub mod register_bitflip;
 pub mod register_flood;
 
 pub use glitch::Glitch;
+pub use instruction_bitflip::InstructionBitFlip;
 use itertools::Itertools;
 pub use register_bitflip::RegisterBitFlip;
 pub use register_flood::RegisterFlood;
@@ -14,7 +16,7 @@ pub use register_flood::RegisterFlood;
 use unicorn_engine::RegisterARM;
 
 /// List of all possible faults
-const FAULTS: [&dyn FaultFunctions; 3] = [
+const FAULTS: [&dyn FaultFunctions; 4] = [
     &Glitch { number: 1 },
     &RegisterBitFlip {
         register: RegisterARM::R0,
@@ -24,6 +26,7 @@ const FAULTS: [&dyn FaultFunctions; 3] = [
         register: RegisterARM::R0,
         value: 0x00,
     },
+    &InstructionBitFlip { xor_value: 0x01 },
 ];
 
 /// Trait for fault injection functions

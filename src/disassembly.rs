@@ -43,6 +43,13 @@ impl Disassembly {
             .contains(format!("r{}", register).as_str())
     }
 
+    // Check if register is used in given instruction
+    pub fn get_instruction_size(&self, instruction: &[u8], addr: u64) -> usize {
+        let inst = self.cs.disasm_count(instruction, addr, 1).unwrap();
+        inst[0]
+            .len()
+    }
+
     /// Disassemble fault data structure
     fn disassembly_fault_data(
         &self,
